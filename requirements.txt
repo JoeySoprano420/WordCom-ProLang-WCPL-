@@ -1,0 +1,6 @@
+# Python dependencies for WCPL (WordCom-ProLang) project
+
+# Example dependencies (replace with actual dependencies)
+requests==2.26.0
+numpy==1.21.1
+matplotlib==3.4.3

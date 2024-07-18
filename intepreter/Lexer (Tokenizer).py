@@ -8,7 +8,7 @@ class Lexer:
         self.current_position = 0
     
     def tokenize(self):
-        # Define token patterns for WCPL and advanced features
+        # Define token patterns
         token_specification = [
             ('KEYWORD', r'(start|stop|open|close|dynamic_print|if|else|for|input|print)'),  # Keywords
             ('IDENTIFIER', r'[a-zA-Z_][a-zA-Z0-9_]*'),  # Identifiers
@@ -17,12 +17,6 @@ class Lexer:
             ('BOOLEAN', r'(True|False)'),  # Booleans
             ('NEWLINE', r'\n'),  # Newlines
             ('SKIP', r'[ \t]+'),  # Skip spaces and tabs
-            ('OPEN', r'\('),  # Opening parenthesis
-            ('CLOSE', r'\)'),  # Closing parenthesis
-            ('SEMICOLON', r';'),  # Semicolon
-            ('OPERATOR', r'\+|\-|\*|\/|==|!=|>|<|>=|<=|&&|\|\|'),  # Operators
-            ('ASSIGN', r'='),  # Assignment operator
-            ('COMMENT', r'#.*'),  # Comments
             ('UNKNOWN', r'.')  # Any other character
         ]
         
@@ -36,7 +30,7 @@ class Lexer:
             if kind == 'NEWLINE':
                 line_num += 1
                 continue
-            elif kind == 'SKIP' or kind == 'COMMENT':
+            elif kind == 'SKIP':
                 continue
             elif kind == 'UNKNOWN':
                 raise SyntaxError(f'Unexpected character {value} on line {line_num}')

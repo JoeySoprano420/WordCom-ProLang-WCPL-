@@ -1,0 +1,39 @@
+        ** Define a class (object-oriented feature from Comrite)
+        beg class Greeter
+          ** Constructor
+          beg def initialize(name: string)
+            self.name = name
+          end
+
+          ** Method to greet
+          beg def greet
+            dynamic print("Hello, " + self.name + "!")
+          end
+        end
+
+        ** Main function
+        beg def main
+          ** Create an instance of Greeter
+          greeter = Greeter("World")
+          greeter.greet() ** Output: Hello, World!
+          
+          ** String manipulation and pattern matching (from WordMaze)
+          text = "WordCom-ProLang is awesome!"
+          beg if text matches ".*awesome.*"
+            dynamic print("Pattern found!")
+          end
+          
+          ** Control structures and data structures (from Comrite)
+          numbers = [1, 2, 3, 4, 5]
+          beg for num in numbers
+            dynamic print(num)
+          end
+          
+          ** Input/Output operations
+          dynamic print("Enter your name:")
+          name = readLine()
+          dynamic print("Welcome, " + name + "!")
+        end
+
+        ** Call the main function
+        open main

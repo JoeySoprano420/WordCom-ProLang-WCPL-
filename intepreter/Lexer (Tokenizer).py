@@ -1,52 +1,51 @@
 import re
 
+# Token types
+TOKENS = {
+    'START': r'\bstart\b',
+    'STOP': r'\bstop\b',
+    'OPEN': r'\bopen\b',
+    'CLOSE': r'\bclose\b',
+    'PRINT': r'dynamic_print',
+    'IDENTIFIER': r'[a-zA-Z_][a-zA-Z_0-9]*',
+    'STRING': r'\".*?\"',
+    'NUMBER': r'\b\d+\b',
+    'WHITESPACE': r'\s+',
+    'NEWLINE': r'\n',
+    'COMMENT': r'#.*',
+}
+
 class Lexer:
     def __init__(self, code):
         self.code = code
         self.tokens = []
-        self.current_token = None
-        self.current_position = 0
-    
+        self.pos = 0
+
     def tokenize(self):
-        # Define token patterns
-        token_specification = [
-            ('KEYWORD', r'(start|stop|open|close|dynamic_print|if|else|for|input|print)'),  # Keywords
-            ('IDENTIFIER', r'[a-zA-Z_][a-zA-Z0-9_]*'),  # Identifiers
-            ('NUMBER', r'\d+(\.\d*)?'),  # Numbers
-            ('STRING', r'\"([^\\\"]|\\.)*\"'),  # Strings
-            ('BOOLEAN', r'(True|False)'),  # Booleans
-            ('NEWLINE', r'\n'),  # Newlines
-            ('SKIP', r'[ \t]+'),  # Skip spaces and tabs
-            ('UNKNOWN', r'.')  # Any other character
-        ]
-        
-        tok_regex = '|'.join('(?P<%s>%s)' % pair for pair in token_specification)
-        line_num = 1
-        
-        for mo in re.finditer(tok_regex, self.code):
-            kind = mo.lastgroup
-            value = mo.group()
-            
-            if kind == 'NEWLINE':
-                line_num += 1
-                continue
-            elif kind == 'SKIP':
-                continue
-            elif kind == 'UNKNOWN':
-                raise SyntaxError(f'Unexpected character {value} on line {line_num}')
-            
-            if kind == 'IDENTIFIER' and value in ('if', 'else', 'for'):
-                kind = 'KEYWORD'
-            elif kind == 'BOOLEAN':
-                value = True if value == 'True' else False
-            
-            token = (kind, value, line_num)
-            self.tokens.append(token)
-    
-    def next_token(self):
-        if self.current_position >= len(self.tokens):
-            return None
-        token = self.tokens[self.current_position]
-        self.current_token = token
-        self.current_position += 1
-        return token
+        while self.pos < len(self.code):
+            match = None
+            for token_type, pattern in TOKENS.items():
+                regex = re.compile(pattern)
+                match = regex.match(self.code, self.pos)
+                if match:
+                    token = (token_type, match.group(0))
+                    if token_type not in ['WHITESPACE', 'COMMENT']:  # Ignore whitespace and comments
+                        self.tokens.append(token)
+                    self.pos = match.end(0)
+                    break
+            if not match:
+                raise SyntaxError(f"Unexpected character: {self.code[self.pos]}")
+        return self.tokens
+
+# Example usage of Lexer
+code = '''
+start
+    open
+        dynamic_print("Hello, WCPL!")
+    close
+stop
+'''
+
+lexer = Lexer(code)
+tokens = lexer.tokenize()
+print(tokens)

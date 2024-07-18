@@ -19,6 +19,8 @@ class Parser:
                     self.dynamic_print_statement()
                 elif keyword == 'if':
                     self.if_statement()
+                elif keyword == 'else':
+                    self.else_statement()
                 elif keyword == 'for':
                     self.for_loop()
                 elif keyword == 'input':
@@ -27,8 +29,10 @@ class Parser:
                     self.print_statement()
                 else:
                     self.error('Unknown keyword')
+            elif self.current_token[0] == 'IDENTIFIER':
+                self.function_call()
             else:
-                self.error('Expected keyword')
+                self.error('Expected keyword or function call')
             
             self.current_token = self.lexer.next_token()
     
@@ -54,24 +58,26 @@ class Parser:
                 self.print_statement()
             else:
                 self.error('Unknown statement')
+        elif self.current_token[0] == 'IDENTIFIER':
+            self.function_call()
         else:
-            self.error('Expected statement')
+            self.error('Expected statement or function call')
     
     def dynamic_print_statement(self):
         self.match('KEYWORD', 'dynamic_print')
-        self.match('OPEN', 'open')
+        self.match('OPEN', '(')
         message = self.current_token[1]
         self.match('STRING', message)
-        self.match('CLOSE', 'close')
+        self.match('CLOSE', ')')
+        self.match('SEMICOLON', ';')
     
     def if_statement(self):
         self.match('KEYWORD', 'if')
-        self.match('OPEN', 'open')
-        # Implement conditional parsing
-        # Example: if condition:
-        self.match('CLOSE', 'close')
+        self.match('OPEN', '(')
+        self.condition()
+        self.match('CLOSE', ')')
         self.block()
-        if self.current_token[1] == 'else':
+        if self.current_token is not None and self.current_token[1] == 'else':
             self.else_statement()
     
     def else_statement(self):
@@ -80,31 +86,17 @@ class Parser:
     
     def for_loop(self):
         self.match('KEYWORD', 'for')
-        self.match('OPEN', 'open')
-        # Implement for loop parsing
-        # Example: for i in range(10):
-        self.match('CLOSE', 'close')
-        self.block()
-    
-    def input_statement(self):
-        self.match('KEYWORD', 'input')
-        self.match('OPEN', 'open')
-        prompt = self.current_token[1]
-        self.match('STRING', prompt)
-        self.match('CLOSE', 'close')
-    
-    def print_statement(self):
-        self.match('KEYWORD', 'print')
-        self.match('OPEN', 'open')
-        message = self.current_token[1]
-        self.match('STRING', message)
-        self.match('CLOSE', 'close')
-    
-    def match(self, expected_type, expected_value):
-        if self.current_token[0] == expected_type and self.current_token[1] == expected_value:
-            self.current_token = self.lexer.next_token()
-        else:
-            self.error(f'Expected {expected_type}: {expected_value}')
-    
-    def error(self, message):
-        raise SyntaxError(message)
+        self.match('OPEN', '(')
+        self.match('IDENTIFIER', 'var')
+        self.match('IDENTIFIER', 'i')
+        self.match('ASSIGN', '=')
+        self.match('NUMBER', '0')
+        self.match('SEMICOLON', ';')
+        self.match('IDENTIFIER', 'i')
+        self.match('OPERATOR', '<')
+        self.match('NUMBER', '10')
+        self.match('SEMICOLON', ';')
+        self.match('IDENTIFIER', 'i')
+        self.match('OPERATOR', '++')
+        self.match('CLOSE', ')')
+        self

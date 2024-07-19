@@ -1,41 +1,45 @@
-class Interpreter:
-    def __init__(self, code):
-        self.lexer = Lexer(code)
-        self.parser = Parser(self.lexer)
-    
-    def interpret(self):
-        self.lexer.tokenize()
-        self.parser.parse()
+class Parser:
+    def __init__(self, tokens):
+        self.tokens = tokens
+        self.pos = 0
+        self.macros = {}
 
-# Example WCPL code to interpret
-wcpl_code = """
-start
-    open
-        dynamic_print("Hello, World!")
-        
-        if
-            open
-                print("Condition met")
-            close
-        else
-            open
-                print("Condition not met")
-            close
-        
-        for
-            open
-                print("Loop iteration")
-            close
-        close
-        
-        input("Enter your name: ")
-        open
-            print(f"Welcome, {name}!")
-        close
-        
-    close
-stop
-"""
+    def parse(self):
+        parsed_code = []
+        while self.pos < len(self.tokens):
+            token_type, value = self.tokens[self.pos]
+            if token_type == 'START':
+                parsed_code.append({'action': 'start'})
+            elif token_type == 'STOP':
+                parsed_code.append({'action': 'stop'})
+            elif token_type == 'OPEN':
+                parsed_code.append({'action': 'open'})
+            elif token_type == 'CLOSE':
+                parsed_code.append({'action': 'close'})
+            elif token_type == 'PRINT':
+                self.pos += 1  # Move past the 'dynamic_print' token
+                if self.tokens[self.pos][0] == 'STRING':
+                    message = self.tokens[self.pos][1]
+                    parsed_code.append({'action': 'print', 'message': message})
+            elif token_type == 'IDENTIFIER' and value == 'macro':
+                self.pos += 1
+                macro_name = self.tokens[self.pos][1]
+                macro_body = self.parse_macro()
+                self.macros[macro_name] = macro_body
+            elif token_type == 'IDENTIFIER' and value in self.macros:
+                parsed_code.extend(self.macros[value])
+            self.pos += 1
+        return parsed_code
 
-interpreter = Interpreter(wcpl_code)
-interpreter.interpret()
+    def parse_macro(self):
+        macro_body = []
+        self.pos += 1  # Move past the macro name
+        while self.tokens[self.pos][0] != 'STOP':
+            token_type, value = self.tokens[self.pos]
+            if token_type == 'PRINT':
+                self.pos += 1
+                if self.tokens[self.pos][0] == 'STRING':
+                    message = self.tokens[self.pos][1]
+                    macro_body.append({'action': 'print', 'message': message})
+            self.pos += 1
+        return macro_body

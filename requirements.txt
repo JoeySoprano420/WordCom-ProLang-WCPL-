@@ -4,3 +4,8 @@
 requests==2.26.0
 numpy==1.21.1
 matplotlib==3.4.3
+qiskit==0.34.2
+pygame==2.1.0
+pydub==0.25.1
+midiutil==1.2.1
+manim==0.10.0

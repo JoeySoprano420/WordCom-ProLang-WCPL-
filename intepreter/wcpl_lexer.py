@@ -10,6 +10,8 @@ TOKENS = {
     'SCRIPT': r'\bscript\b',
     'QUANTUM': r'\bquantum\b',
     'GAME': r'\bgame\b',
+    'MUSIC': r'\bmusic\b',
+    'ANIMATION': r'\banimation\b',
     'IDENTIFIER': r'[a-zA-Z_][a-zA-Z_0-9]*',
     'STRING': r'\".*?\"',
     'NUMBER': r'\b\d+\b',
@@ -17,6 +19,7 @@ TOKENS = {
     'NEWLINE': r'\n',
     'COMMENT': r'#.*',
 }
+
 
 
 class Lexer:

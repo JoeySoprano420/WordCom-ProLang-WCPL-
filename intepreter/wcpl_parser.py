@@ -21,6 +21,11 @@ class Parser:
                 if self.tokens[self.pos][0] == 'STRING':
                     message = self.tokens[self.pos][1]
                     parsed_code.append({'action': 'print', 'message': message})
+            elif token_type == 'SCRIPT':
+                self.pos += 1  # Move past the 'script' token
+                if self.tokens[self.pos][0] == 'STRING':
+                    script_file = self.tokens[self.pos][1].strip('"')
+                    parsed_code.append({'action': 'script', 'file': script_file})
             elif token_type == 'IDENTIFIER' and value == 'macro':
                 self.pos += 1
                 macro_name = self.tokens[self.pos][1]

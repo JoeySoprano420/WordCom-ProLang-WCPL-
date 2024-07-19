@@ -27,10 +27,25 @@ class Parser:
                     script_file = self.tokens[self.pos][1].strip('"')
                     parsed_code.append({'action': 'script', 'file': script_file})
             elif token_type == 'QUANTUM':
-                self.pos += 1  # Move past the 'quantum' token
+                self.pos += 1
                 if self.tokens[self.pos][0] == 'STRING':
                     quantum_code = self.tokens[self.pos][1].strip('"')
                     parsed_code.append({'action': 'quantum', 'code': quantum_code})
+            elif token_type == 'GAME':
+                self.pos += 1
+                if self.tokens[self.pos][0] == 'STRING':
+                    game_code = self.tokens[self.pos][1].strip('"')
+                    parsed_code.append({'action': 'game', 'code': game_code})
+            elif token_type == 'MUSIC':
+                self.pos += 1
+                if self.tokens[self.pos][0] == 'STRING':
+                    music_code = self.tokens[self.pos][1].strip('"')
+                    parsed_code.append({'action': 'music', 'code': music_code})
+            elif token_type == 'ANIMATION':
+                self.pos += 1
+                if self.tokens[self.pos][0] == 'STRING':
+                    animation_code = self.tokens[self.pos][1].strip('"')
+                    parsed_code.append({'action': 'animation', 'code': animation_code})
             elif token_type == 'IDENTIFIER' and value == 'macro':
                 self.pos += 1
                 macro_name = self.tokens[self.pos][1]

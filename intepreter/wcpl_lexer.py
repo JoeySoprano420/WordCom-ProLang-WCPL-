@@ -7,6 +7,9 @@ TOKENS = {
     'OPEN': r'\bopen\b',
     'CLOSE': r'\bclose\b',
     'PRINT': r'dynamic_print',
+    'SCRIPT': r'\bscript\b',
+    'QUANTUM': r'\bquantum\b',
+    'GAME': r'\bgame\b',
     'IDENTIFIER': r'[a-zA-Z_][a-zA-Z_0-9]*',
     'STRING': r'\".*?\"',
     'NUMBER': r'\b\d+\b',
@@ -14,6 +17,7 @@ TOKENS = {
     'NEWLINE': r'\n',
     'COMMENT': r'#.*',
 }
+
 
 class Lexer:
     def __init__(self, code):
